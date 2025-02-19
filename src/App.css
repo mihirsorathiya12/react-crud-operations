@@ -1,0 +1,172 @@
+/* Main container */
+.app {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 50px auto;
+  text-align: center;
+  max-width: 1400px;
+  padding: 30px;
+  background-color: #f4f7f9;
+  border-radius: 10px;
+  box-shadow: 0px 20px 40 px;
+}
+
+h1 {
+  color: #2c3e50;
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Form Container */
+.form-container {
+  margin-bottom: 40px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+input {
+  padding: 12px;
+  margin: 10px 5px;
+  width: 250px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.6);
+}
+
+button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: 0.3s;
+}
+
+.submit-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
+}
+
+.update-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.update-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Data List Styles */
+.data-list {
+  margin-top: 40px;
+  padding: 0;
+}
+
+.data-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.data-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.data-item span {
+  font-size: 18px;
+  font-weight: 500;
+  color: #34495e;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.view-btn {
+  background-color: #17a2b8;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 50px;
+  transition: background-color 0.3s ease;
+}
+
+.view-btn:hover {
+  background-color: #138496;
+}
+
+.edit-btn {
+  background-color: #ffc107;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 50px;
+  transition: background-color 0.3s ease;
+}
+
+.edit-btn:hover {
+  background-color: #e0a800;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 50px;
+  transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .form-container {
+    width: 100%;
+    padding: 15px;
+  }
+
+  input {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .data-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .action-buttons {
+    margin-top: 10px;
+    gap: 8px;
+  }
+}
