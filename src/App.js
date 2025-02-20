@@ -8,12 +8,21 @@ const App = () => {
     email: "",
     date: "",
     phone: "",
+    gender: "", // Radio Button
+    terms: false, // Checkbox
+    country: "", // Select Field
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
+  const [errors, setErrors] = useState({});
 
+  // Handle form field changes
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const handleFileChange = (e) => {
@@ -23,7 +32,25 @@ const App = () => {
   // Memoize the data list to avoid unnecessary re-renders
   const memoizedData = useMemo(() => data, [data]);
 
+  // Handle form submission
   const handleSubmit = useCallback(() => {
+    // Form validation
+    const validationErrors = {};
+    if (!formData.name) validationErrors.name = "Name is required";
+    if (!formData.email) validationErrors.email = "Email is required";
+    if (!formData.phone) validationErrors.phone = "Phone is required";
+    if (!formData.date) validationErrors.date = "Date is required";
+    if (!formData.gender) validationErrors.gender = "Gender is required";
+    if (!formData.country) validationErrors.country = "Country is required";
+    if (!formData.terms) validationErrors.terms = "You must accept the terms";
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({}); // Clear errors if valid
+
     if (isEditing) {
       const updatedData = [...data];
       updatedData[editIndex] = formData;
@@ -38,9 +65,13 @@ const App = () => {
       email: "",
       date: "",
       phone: "",
+      gender: "",
+      terms: false,
+      country: "",
     });
   }, [data, formData, isEditing, editIndex]);
 
+  // Handle edit action
   const handleEdit = useCallback(
     (index) => {
       setFormData(data[index]);
@@ -50,6 +81,7 @@ const App = () => {
     [data]
   );
 
+  // Handle delete action
   const handleDelete = useCallback(
     (index) => {
       const updatedData = data.filter((_, i) => i !== index);
@@ -58,6 +90,7 @@ const App = () => {
     [data]
   );
 
+  // Handle view action
   const handleView = (index) => {
     alert(`Name: ${data[index].name}\nEmail: ${data[index].email}`);
   };
@@ -74,6 +107,8 @@ const App = () => {
           value={formData.name}
           onChange={handleChange}
         />
+        {errors.name && <p className="error">{errors.name}</p>}
+
         <input
           type="email"
           name="email"
@@ -81,13 +116,16 @@ const App = () => {
           value={formData.email}
           onChange={handleChange}
         />
+        {errors.email && <p className="error">{errors.email}</p>}
+
         <input
           type="date"
           name="date"
           value={formData.date}
           onChange={handleChange}
         />
-       
+        {errors.date && <p className="error">{errors.date}</p>}
+
         <input
           type="tel"
           name="phone"
@@ -95,6 +133,61 @@ const App = () => {
           value={formData.phone}
           onChange={handleChange}
         />
+        {errors.phone && <p className="error">{errors.phone}</p>}
+
+        {/* Radio Button for Gender */}
+        <div>
+          <label>Gender: </label>
+          <label>
+            <input
+              type="radio"
+              name="gender"
+              value="Male"
+              checked={formData.gender === "Male"}
+              onChange={handleChange}
+            />
+            Male
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="gender"
+              value="Female"
+              checked={formData.gender === "Female"}
+              onChange={handleChange}
+            />
+            Female
+          </label>
+        </div>
+        {errors.gender && <p className="error">{errors.gender}</p>}
+
+        {/* Checkbox for Terms */}
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              name="terms"
+              checked={formData.terms}
+              onChange={handleChange}
+            />
+            I accept the terms and conditions
+          </label>
+        </div>
+        {errors.terms && <p className="error">{errors.terms}</p>}
+
+        {/* Select for Country */}
+        <select
+          name="country"
+          value={formData.country}
+          onChange={handleChange}
+        >
+          <option value="">Select Country</option>
+          <option value="USA">INDIAN</option>
+          <option value="Canada">UK</option>
+          <option value="UK">USA</option>
+        </select>
+        {errors.country && <p className="error">{errors.country}</p>}
+
         <button
           className={`submit-btn ${isEditing ? "update-btn" : "submit-btn"}`}
           onClick={handleSubmit}
@@ -112,6 +205,8 @@ const App = () => {
               <div><strong>Email:</strong> {item.email}</div>
               <div><strong>Phone:</strong> {item.phone}</div>
               <div><strong>Date:</strong> {item.date}</div>
+              <div><strong>Gender:</strong> {item.gender}</div>
+              <div><strong>Country:</strong> {item.country}</div>
              
               <div className="action-buttons">
                 <button className="view-btn" onClick={() => handleView(index)}>
@@ -130,7 +225,7 @@ const App = () => {
             </div>
           ))
         ) : (
-          <p>No data available. Please add some entries.</p>
+          <p>   </p>
         )}
       </div>
     </div>
