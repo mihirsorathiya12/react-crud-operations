@@ -1,4 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
+import { FormLabel } from '@mui/material';
+import { TextField, Button, FormControl, FormControlLabel, Radio, RadioGroup, Checkbox, Select, MenuItem, InputLabel, FormHelperText, Container, Grid, Typography } from '@mui/material';
 import "./App.css";
 
 const App = () => {
@@ -8,15 +10,14 @@ const App = () => {
     email: "",
     date: "",
     phone: "",
-    gender: "", // Radio Button
-    terms: false, // Checkbox
-    country: "", // Select Field
+    gender: "",
+    terms: false,
+    country: "",
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [errors, setErrors] = useState({});
 
-  // Handle form field changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -29,12 +30,9 @@ const App = () => {
     setFormData({ ...formData, file: e.target.files[0] });
   };
 
-  // Memoize the data list to avoid unnecessary re-renders
   const memoizedData = useMemo(() => data, [data]);
 
-  // Handle form submission
   const handleSubmit = useCallback(() => {
-    // Form validation
     const validationErrors = {};
     if (!formData.name) validationErrors.name = "Name is required";
     if (!formData.email) validationErrors.email = "Email is required";
@@ -49,8 +47,7 @@ const App = () => {
       return;
     }
 
-    setErrors({}); // Clear errors if valid
-
+    setErrors({});
     if (isEditing) {
       const updatedData = [...data];
       updatedData[editIndex] = formData;
@@ -71,7 +68,6 @@ const App = () => {
     });
   }, [data, formData, isEditing, editIndex]);
 
-  // Handle edit action
   const handleEdit = useCallback(
     (index) => {
       setFormData(data[index]);
@@ -81,7 +77,6 @@ const App = () => {
     [data]
   );
 
-  // Handle delete action
   const handleDelete = useCallback(
     (index) => {
       const updatedData = data.filter((_, i) => i !== index);
@@ -90,145 +85,175 @@ const App = () => {
     [data]
   );
 
-  // Handle view action
   const handleView = (index) => {
     alert(`Name: ${data[index].name}\nEmail: ${data[index].email}`);
   };
 
   return (
-    <div className="app">
-      <h1>React CRUD Operation</h1>
+    <Container maxWidth="sm">
+      <Typography variant="h4" align="center" gutterBottom>
+        React CRUD Operation
+      </Typography>
 
       <div className="form-container">
-        <input
-          type="text"
+        <TextField
+          fullWidth
+          label="Enter Name"
           name="name"
-          placeholder="Enter Name"
           value={formData.name}
           onChange={handleChange}
+          error={Boolean(errors.name)}
+          helperText={errors.name}
+          margin="normal"
         />
-        {errors.name && <p className="error">{errors.name}</p>}
 
-        <input
-          type="email"
+        <TextField
+          fullWidth
+          label="Enter Email"
           name="email"
-          placeholder="Enter Email"
           value={formData.email}
           onChange={handleChange}
+          error={Boolean(errors.email)}
+          helperText={errors.email}
+          margin="normal"
         />
-        {errors.email && <p className="error">{errors.email}</p>}
 
-        <input
+        <TextField
+          fullWidth
           type="date"
           name="date"
           value={formData.date}
           onChange={handleChange}
+          error={Boolean(errors.date)}
+          helperText={errors.date}
+          margin="normal"
+          InputLabelProps={{
+            shrink: true,
+          }}
         />
-        {errors.date && <p className="error">{errors.date}</p>}
 
-        <input
+        <TextField
+          fullWidth
           type="tel"
+          label="Enter Phone Number"
           name="phone"
-          placeholder="Enter Phone Number"
           value={formData.phone}
           onChange={handleChange}
+          error={Boolean(errors.phone)}
+          helperText={errors.phone}
+          margin="normal"
         />
-        {errors.phone && <p className="error">{errors.phone}</p>}
 
-        {/* Radio Button for Gender */}
-        <div>
-          <label>Gender: </label>
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              value="Male"
-              checked={formData.gender === "Male"}
-              onChange={handleChange}
-            />
-            Male
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              value="Female"
-              checked={formData.gender === "Female"}
-              onChange={handleChange}
-            />
-            Female
-          </label>
-        </div>
-        {errors.gender && <p className="error">{errors.gender}</p>}
+        <FormControl component="fieldset" margin="normal" error={Boolean(errors.gender)}>
+          <FormLabel component="legend">Gender</FormLabel>
+          <RadioGroup
+            name="gender"
+            value={formData.gender}
+            onChange={handleChange}
+            row
+          >
+            <FormControlLabel value="Male" control={<Radio />} label="Male" />
+            <FormControlLabel value="Female" control={<Radio />} label="Female" />
+          </RadioGroup>
+          {errors.gender && <FormHelperText>{errors.gender}</FormHelperText>}
+        </FormControl>
 
-        {/* Checkbox for Terms */}
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              name="terms"
-              checked={formData.terms}
-              onChange={handleChange}
-            />
-            I accept the terms and conditions
-          </label>
-        </div>
-        {errors.terms && <p className="error">{errors.terms}</p>}
+        <FormControl margin="normal" error={Boolean(errors.terms)}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                name="terms"
+                checked={formData.terms}
+                onChange={handleChange}
+              />
+            }
+            label="I accept the terms and conditions"
+          />
+          {errors.terms && <FormHelperText>{errors.terms}</FormHelperText>}
+        </FormControl>
 
-        {/* Select for Country */}
-        <select
-          name="country"
-          value={formData.country}
-          onChange={handleChange}
-        >
-          <option value="">Select Country</option>
-          <option value="USA">INDIAN</option>
-          <option value="Canada">UK</option>
-          <option value="UK">USA</option>
-        </select>
-        {errors.country && <p className="error">{errors.country}</p>}
+        <FormControl fullWidth margin="normal" error={Boolean(errors.country)}>
+          <InputLabel>Country</InputLabel>
+          <Select
+            name="country"
+            value={formData.country}
+            onChange={handleChange}
+          >
+            <MenuItem value="">Select Country</MenuItem>
+            <MenuItem value="INDIA">INDIA</MenuItem>
+            <MenuItem value="Canada">Canada</MenuItem>
+            <MenuItem value="USA">USA</MenuItem>
+          </Select>
+          {errors.country && <FormHelperText>{errors.country}</FormHelperText>}
+        </FormControl>
 
-        <button
-          className={`submit-btn ${isEditing ? "update-btn" : "submit-btn"}`}
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
           onClick={handleSubmit}
         >
           {isEditing ? "Update" : "Submit"}
-        </button>
+        </Button>
       </div>
 
-      {/* Display the list of data below the form */}
       <div className="data-list">
         {memoizedData.length > 0 ? (
           memoizedData.map((item, index) => (
             <div key={index} className="data-item">
-              <div><strong>Name:</strong> {item.name}</div>
-              <div><strong>Email:</strong> {item.email}</div>
-              <div><strong>Phone:</strong> {item.phone}</div>
-              <div><strong>Date:</strong> {item.date}</div>
-              <div><strong>Gender:</strong> {item.gender}</div>
-              <div><strong>Country:</strong> {item.country}</div>
-             
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <strong>Name:</strong> {item.name}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <strong>Email:</strong> {item.email}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <strong>Phone:</strong> {item.phone}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <strong>Date:</strong> {item.date}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <strong>Gender:</strong> {item.gender}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <strong>Country:</strong> {item.country}
+                </Grid>
+              </Grid>
+
               <div className="action-buttons">
-                <button className="view-btn" onClick={() => handleView(index)}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => handleView(index)}
+                >
                   View
-                </button>
-                <button className="edit-btn" onClick={() => handleEdit(index)}>
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => handleEdit(index)}
+                >
                   Edit
-                </button>
-                <button
-                  className="delete-btn"
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="error"
                   onClick={() => handleDelete(index)}
                 >
                   Delete
-                </button>
+                </Button>
               </div>
             </div>
           ))
         ) : (
-          <p>   </p>
+          <Typography variant="body1" align="center" color="textSecondary">
+            {/* No data available */}
+          </Typography>
         )}
       </div>
-    </div>
+    </Container>
   );
 };
 
